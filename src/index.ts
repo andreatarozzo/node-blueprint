@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import { loggingMiddleware } from './middleware';
+import { auth } from 'express-openid-connect';
 
 dotenv.config();
 const app = express();
@@ -9,9 +10,10 @@ const app = express();
 app.use(helmet());
 app.use(loggingMiddleware);
 app.set('trust proxy', true);
+app.use(auth());
 
 app.get('/', (req, res) => {
-  res.send('Hello, world!');
+  res.send(`Hello ${req.oidc?.user?.name}`);
 });
 
 // Start the server
